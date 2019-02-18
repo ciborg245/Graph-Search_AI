@@ -1,5 +1,5 @@
 import sys
-from math import trunc, sqrt
+# from math import trunc, sqrt
 from graphSearch import *
 from sudokuProblem import *
 
@@ -14,8 +14,8 @@ def main():
     #
     # print(cont)
 
-    sudoku_problem = SudokuProblem(input, 9)
-    print(graph_search(sudoku_problem))
+    # sudoku_problem = SudokuProblem(input, 9)
+    # print(graph_search(sudoku_problem))
 
 
     # print([input[x][y] for x in range(4) for y in range(4) if trunc(y / 2) == trunc(3 / 2) and trunc(x / 2) == trunc(0 / 2)])

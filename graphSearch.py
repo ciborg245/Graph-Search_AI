@@ -12,17 +12,20 @@ def graph_search(problem):
     explored = []
 
     # while True:
-    for n in range(2):
+    for n in range(100000):
         if len(frontier):
             path = a_star(frontier, problem)
             # print("frontier:", frontier)
-            print("path: ", path)
-
+            # print(n)
+            # print("path: ", path)
+            print(n)
 
             s = path[-1]
+            frontier.remove(path)
             explored.append(s)
 
             if problem.goal_test(s):
+                print(n)
                 print("solved")
                 return path
 
@@ -31,7 +34,7 @@ def graph_search(problem):
                 # print("result: ", result)
 
                 if result not in explored:
-                    new_path = []
+                    # new_path = []
                     new_path = path[:]
                     new_path.append(result)
 
