@@ -21,7 +21,7 @@ def graph_search(problem):
     explored = []
 
     # while True:
-    for n in range(1000):
+    for n in range(10000):
         if len(frontier):
             path = a_star(frontier, problem)
             # print("frontier:", frontier)
