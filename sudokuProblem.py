@@ -1,19 +1,22 @@
-from math import sqrt, trunc
+from math import sqrt, trunc, log, exp, e, ceil
 
-def is_move_possible(state, i, j, a, entries):
+def is_move_possible(state, i, j, a, entries, grids = None):
     if a in state[i]:
         return False
     if a in [state[x][j] for x in range(entries)]:
         return False
     r = sqrt(entries)
-    if a in [state[x][y] for x in range(entries) for y in range(entries) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)]:
-        return False
-
+    if not grids:
+        if a in [state[x][y] for x in range(entries) for y in range(entries) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)]:
+            return False
+    else:
+        if a in grids[3*trunc(i/3)+trunc(j/3)]:
+            return False
     return True
 
 class SudokuProblem(object):
 
-    def __init__(self, initial, n=4):
+    def __init__(self, initial, n = 4):
         self.initial = initial
         self.n = n
         self.total = n**n
@@ -21,11 +24,17 @@ class SudokuProblem(object):
     def actions(self, state):
         res = []
 
+        grids = []
+        r = trunc(sqrt(self.n))
+        for i in range(0, self.n, r):
+            for j in range(0, self.n, r):
+                grids.append([state[x][y] for x in range(self.n) for y in range(self.n) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)])
+
         for i in range(self.n):
             for j in range(self.n):
                 if (state[i][j] == 0):
                     for a in range(1, self.n + 1):
-                        if is_move_possible(state, i, j, a, self.n):
+                        if is_move_possible(state, i, j, a, self.n, grids):
                             temp = []
                             for k in state:
                                 temp.append(k[:])
@@ -78,29 +87,28 @@ class SudokuProblem(object):
 
     def h(self, states):
         last_state = states[-1]
-        res = 0
-        row_score = 0
-        col_score = 0
-        grid_score = 0
-        # for i in range(self.n):
-        #     row_score += sum(1 for x in range(self.n) if last_state[i][x] != 0)
-            # col_score += sum(1 for x in range(self.n) if last_state[x][i] != 0)
-        #
-        r = trunc(sqrt(self.n))
-        for i in range(0, self.n, r):
-            for j in range(0, self.n, r):
-                grid = [last_state[x][y] for x in range(self.n) for y in range(self.n) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)]
-                grid_score += sum(1 for x in range(self.n) if grid[x] != 0)
 
+        moves = 0
+        if len(states) > 1:
+            second_to_last_state = states[-2]
+            # grids = []
 
-        # score = trunc(row_score / (self.n-1)) + trunc(col_score / (self.n-1)) + trunc(grid_score / (self.n-1))
-        score = (self.n*3 - trunc(row_score / (self.n-1)) - trunc(col_score / (self.n-1)) - trunc(grid_score / (self.n-1)))
-        score += (12 - len(states)) if self.n == 4 else (84 - len(states))
-        # score += 84 - len(states)
+            # r = trunc(sqrt(self.n))
+            # for i in range(0, self.n, r):
+            #     for j in range(0, self.n, r):
+            #         grids.append([second_to_last_state[x][y] for x in range(self.n) for y in range(self.n) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)])
+
+            for i in range(self.n):
+                for j in range(self.n):
+                    if (second_to_last_state[i][j] != last_state[i][j]):
+                        moves = 1
+                        for a in range(1, self.n + 1):
+                            if last_state[i][j] != a:
+                                if is_move_possible(second_to_last_state, i, j, a, self.n):
+                                    moves += 1
 
         # print(states)
+        # score = 140 - trunc(e*len(states)) + 5**moves
+        score = self.n + trunc(exp(moves)) - ceil(log(len(states), 2))
         # print(score)
-        # print(row_score)
-        # print(col_score)
-        # print(grid_score)
         return score
