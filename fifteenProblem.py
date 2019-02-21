@@ -55,7 +55,7 @@ class FifteenProblem(object):
                     if state[i][j] != 0:
                         return False
                 else:
-                    if not (state[i][j] != i*4 + j + 1):
+                    if (state[i][j] != i*4 + j + 1):
                         return False
 
         return True
@@ -69,7 +69,8 @@ class FifteenProblem(object):
     def h(self, states):
         score = 0
         last_state = states[-1]
-        h1 = sum([3 for x in range(4) for y in range(4) if last_state[x][y] != x*4 + y + 1 and last_state[x][y] != 0])
+        # h1 = 0
+        h1 = sum([1 for x in range(4) for y in range(4) if last_state[x][y] != x*4 + y + 1 and last_state[x][y] != 0])
         # print(last_state)
         # print(h1)
         line = [last_state[x][y] for x in range(4) for y in range(4)]
@@ -84,10 +85,13 @@ class FifteenProblem(object):
                     pos_x = x
                     pos_y = y
 
+        mod_zero = pos_x % 4
+        div_zero = trunc(pos_y / 4)
         h2 = sum([\
-            (abs((line[x]-1) % 4 - x % 4) + abs(trunc((line[x]-1) / 4) - trunc(x / 4)))*(line[x])\
-            + (abs((line[x]-1) % 4 - pos_x % 4) + abs(trunc((line[x]-1) / 4) - trunc(pos_x / 4)))*(line[x])\
-            for x in range(16) if x != 0])
+            (abs((line[x]-1) % 4 - x % 4) + abs(trunc((line[x]-1) / 4) - trunc(x / 4)))*(line[x]) +\
+            (abs((line[x]-1) % 4 - mod_zero) + abs(trunc((line[x]-1) / 4) - div_zero))*(line[x])\
+            for x in range(16)\
+            if x != 0 and line[x]-1 != x])
         # print(h2)
 
         # h3 = 0
