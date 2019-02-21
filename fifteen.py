@@ -28,6 +28,7 @@ def main():
 
     print(grid)
     fifteen_problem = FifteenProblem(grid)
+    # print(fifteen_problem.goal_test([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]))
     print(graph_search(fifteen_problem))
 
 if (__name__ == "__main__"):

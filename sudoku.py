@@ -6,12 +6,19 @@ from sudokuProblem import *
 def main():
     input = sys.argv[1].replace('start=','').replace('.','0')
 
-    input = create_grid(input, 9)
+    if (len(input) == 16):
+        input = create_grid(input)
+        sudoku_problem = SudokuProblem(input)
+        print(graph_search(sudoku_problem))
+    elif (len(input) == 81):
+        input = create_grid(input, 9)
 
-    sudoku_problem = SudokuProblem(input, 9)
-    print(graph_search(sudoku_problem))
+        sudoku_problem = SudokuProblem(input, 9)
+        print(graph_search(sudoku_problem))
+    else:
+        print('Invalid sudoku.')
 
-    
+
 def create_grid(input, n=4):
     return [[int(input[x+y*n]) for x in range(n)] for y in range(n)]
 
