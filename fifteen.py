@@ -8,7 +8,7 @@ def main():
     input = sys.argv[1].replace('start=','').replace('.','0')
 
     grid = [[input[trunc(y * 4) + x] for x in range(4)] for y in range(4)]
-
+    test = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0]
     for i in range(4):
         for j in range(4):
             if (grid[i][j] == 'A'):
@@ -26,10 +26,18 @@ def main():
             else:
                 grid[i][j] = int(grid[i][j])
 
-    print(grid)
-    fifteen_problem = FifteenProblem(grid)
-    # print(fifteen_problem.goal_test([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]))
-    print(graph_search(fifteen_problem))
+            try:
+                test.remove(grid[i][j])
+            except:
+                pass
+
+    if (len(test) != 0):
+        print('Invalid puzzle.')
+    else:
+        print(grid)
+        fifteen_problem = FifteenProblem(grid)
+        # print(fifteen_problem.goal_test([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]))
+        print(graph_search(fifteen_problem))
 
 if (__name__ == "__main__"):
     main()

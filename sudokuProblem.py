@@ -96,12 +96,14 @@ class SudokuProblem(object):
 
         if len(states) > 1:
             second_to_last_state = states[-2]
-        #     # grids = []
-        #     #
-        #     # r = trunc(sqrt(self.n))
-        #     # for i in range(0, self.n, r):
-        #     #     for j in range(0, self.n, r):
-        #     #         grids.append([second_to_last_state[x][y] for x in range(self.n) for y in range(self.n) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)])
+
+
+        # grids = []
+        #
+        # r = trunc(sqrt(self.n))
+        # for i in range(0, self.n, r):
+        #     for j in range(0, self.n, r):
+        #         grids.append([last_state[x][y] for x in range(self.n) for y in range(self.n) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)])
         #
         #     for i in range(self.n):
         #         for j in range(self.n):
@@ -112,11 +114,11 @@ class SudokuProblem(object):
         #                         if is_move_possible(second_to_last_state, i, j, a, self.n):
         #                             moves += 1
 
-        # grids = []
-        # r = trunc(sqrt(self.n))
-        # for i in range(0, self.n, r):
-        #     for j in range(0, self.n, r):
-        #         grids.append([last_state[x][y] for x in range(self.n) for y in range(self.n) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)])
+        grids = []
+        r = trunc(sqrt(self.n))
+        for i in range(0, self.n, r):
+            for j in range(0, self.n, r):
+                grids.append([last_state[x][y] for x in range(self.n) for y in range(self.n) if trunc(y / r) == trunc(j / r) and trunc(x / r) == trunc(i / r)])
 
         for i in range(self.n):
             # if 0 in last_state[i]:
@@ -128,6 +130,7 @@ class SudokuProblem(object):
             temp_col = []
             cont_row = 0
             cont_col = 0
+            cont_grid = 0
             for j in range(self.n):
                 temp_col.append(last_state[j][i])
 
@@ -135,6 +138,9 @@ class SudokuProblem(object):
                     empty_cells += 1
                 else:
                     cont_col += 1
+
+                if grids[i][j] != 0:
+                    cont_grid += 1
                     # for a in range(1, self.n + 1):
                     #     if is_move_possible(last_state, i, j, a, self.n):
                     #         moves += 1
@@ -146,16 +152,18 @@ class SudokuProblem(object):
                         moves = 1
                         for a in range(1, self.n + 1):
                             if last_state[i][j] != a:
-                                if is_move_possible(second_to_last_state, i, j, a, self.n):
+                                if is_move_possible(second_to_last_state, i, j, a, self.n, grids):
                                     moves += 1
 
             cont_col = sum([1 for x in range(self.n) if temp_col[x] != 0])
 
-            col_score += trunc(cont_col / 9)
-            row_score += trunc(cont_row / 9)
+            col_score += trunc(cont_col / (self.n-2))
+            row_score += trunc(cont_row / (self.n-2))
+            grid_score += trunc(cont_grid / (self.n-2))
 
         row_score = self.n - row_score
         col_score = self.n - col_score
+        grid_score = self.n - grid_score
         # for i in range(self.n):
         #     row_score += sum(1 for x in range(self.n) if last_state[i][x] != 0)
         #     col_score += sum(1 for x in range(self.n) if last_state[x][i] != 0)
@@ -168,7 +176,7 @@ class SudokuProblem(object):
         # score += (12 - len(states))
         # print(score)
 
-        score = empty_cells + moves + row_score + col_score
+        score = empty_cells + moves + row_score + col_score + grid_score
 
 
 
