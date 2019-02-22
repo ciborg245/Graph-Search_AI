@@ -34,6 +34,16 @@ def main():
     if (len(test) != 0):
         print('Invalid puzzle.')
     else:
+        # line = [grid[x][y] for x in range(4) for y in range(4)]
+        # inv = 0
+        # for i in range(15):
+        #     for i+1 in range(14):
+        #         if (line[i] != 0):
+        #             if (line[i] > line[j]):
+        #                 inv += 1
+        #
+        # if ()
+
         print(grid)
         fifteen_problem = FifteenProblem(grid)
         # print(fifteen_problem.goal_test([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]))
